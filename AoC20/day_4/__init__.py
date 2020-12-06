@@ -27,9 +27,9 @@ class Passport:
 
         self.byr, self.iyr, self.eyr = map(int, [self.byr, self.iyr, self.eyr])
 
-        byr = 1920 <= int(self.byr) <= 2002
-        iyr = 2010 <= int(self.iyr) <= 2020
-        eyr = 2020 <= int(self.eyr) <= 2030
+        byr = 1920 <= self.byr <= 2002
+        iyr = 2010 <= self.iyr <= 2020
+        eyr = 2020 <= self.eyr <= 2030
 
         if match := HGT_CM_MATCHER.fullmatch(self.hgt):
             hgt = 150 <= int(match.group(1)) <= 193
