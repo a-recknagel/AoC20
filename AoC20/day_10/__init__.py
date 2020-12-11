@@ -1,5 +1,3 @@
-
-
 example_data_a = """\
 16
 10
