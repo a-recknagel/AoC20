@@ -1,16 +1,16 @@
 from itertools import product
 
-from AoC20.day_14 import data as data, PCS
+from AoC20.day_14 import data as data, parse
 
 
-def solve(pcs: PCS):
+def solve(inp):
     mem = {}
     trans = {
         "0": lambda x: x,
         "1": lambda x: "1",
         "X": lambda x: "{}",
     }
-    for mask, instructions in pcs.blocks():
+    for mask, instructions in parse(inp):
         for address, value in instructions:
             address_base = "".join([
                 trans[m](a) for
@@ -23,4 +23,4 @@ def solve(pcs: PCS):
     return sum(mem.values())
 
 
-print(solve(PCS(data)))
+print(solve(data))

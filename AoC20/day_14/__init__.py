@@ -1,23 +1,20 @@
 import typing as ty
 import re
 
-PARSE = re.compile(r"mem\[(?P<address>\d+)\] = (?P<value>\d+)")
+INSTRUCTION_PARSER = re.compile(r"mem\[(?P<address>\d+)\] = (?P<value>\d+)")
 
 
-class PCS:
-    def __init__(self, inp: ty.Iterable[str]):
-        self.masks: ty.List[str] = []
-        self.instructions_block: ty.List[ty.List[ty.Tuple[str, int]]] = []
-        for line in inp:
-            if line.startswith('mask'):
-                self.masks.append(line[7:])
-                self.instructions_block.append([])
-            else:
-                match = PARSE.match(line)
-                self.instructions_block[-1].append((f"{int(match['address']):036b}", int(match['value'])))
-
-    def blocks(self) -> ty.Iterable[ty.Tuple[str, ty.List[ty.Tuple[str, int]]]]:
-        return zip(self.masks, self.instructions_block)
+def parse(inp: ty.Iterable[str]) -> ty.Iterable[ty.Tuple[str, ty.List[ty.Tuple[str, int]]]]:
+    masks = []
+    instructions_block = []
+    for line in inp:
+        if line.startswith('mask'):
+            masks.append(line[7:])
+            instructions_block.append([])
+        else:
+            match = INSTRUCTION_PARSER.match(line)
+            instructions_block[-1].append((f"{int(match['address']):036b}", int(match['value'])))
+    yield from zip(masks, instructions_block)
 
 
 example_data_a = """\
