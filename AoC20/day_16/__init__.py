@@ -27,24 +27,23 @@ class Rules:
             if not any(verdicts):
                 return num
 
-    def field_deduction(self, tickets: ty.List[ty.List[int]]) -> ty.Dict[int, str]:
+    def field_deduction(self, tickets: ty.List[ty.List[int]]) -> ty.Dict[str, int]:
         options = {*self.fields.keys()}
         cols = [*zip(*tickets)]
 
-        def dfs(col_idx, assumptions):
-            if col_idx == len(cols):
-                return assumptions
+        guesses = {i: {*options} for i in range(len(cols))}
+        while not all(len(o) == 1 for o in guesses.values()):
 
-            col_options = options - assumptions.keys()
-            col_options -= {name for name in col_options if any(num not in self.fields[name] for num in cols[col_idx])}
+            for idx, col in enumerate(cols):
+                guess = guesses[idx]
+                guess -= {name for name in guess if any(num not in self.fields[name] for num in col)}
 
-            for option in col_options:
-                if trie := dfs(col_idx + 1, {**assumptions, option: col_idx}) is not None:
-                    return trie
+                if len(guess) == 1:
+                    for other_guess in guesses.values():
+                        if other_guess != guess:
+                            other_guess -= guess
 
-        return {v: k for k, v in dfs(0, {}).items()}
-
-
+        return {v.pop(): k for k, v in guesses.items()}
 
 
 def parse(inp):
