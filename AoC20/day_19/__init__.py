@@ -18,32 +18,29 @@ class Idx:
     def __init__(self):
         self.val = 0
 
-    def __call__(self):
-        return self.val
-
     def __add__(self, other):
         self.val += other
         return self
 
 
 def match(rule_idx, rules, inp, current):
-    if current() >= len(inp):
+    if current.val >= len(inp):
         return False
-    for rule in rules[rule_idx]:
-        if rule in ["a", "b"]:
-            if inp[current()] == rule:
+    for option in rules[rule_idx]:
+        if option in ["a", "b"]:
+            if inp[current.val] == option:
                 current += 1
                 return True
             return False
-        bak = current()
-        for option in rule:
-            if match(option, rules, inp, current):
+        bak = current.val
+        for r_i in option:
+            if match(r_i, rules, inp, current):
                 pass
             else:
                 current.val = bak
                 break
         else:
-            return rule_idx != 0 or current() >= len(inp)
+            return rule_idx != 0 or current.val >= len(inp)
     return False
 
 
@@ -73,7 +70,7 @@ example_data_c = """\
 1: 2 | 2 1
 2: "a"
 
-a\
+aa\
 """
 
 
